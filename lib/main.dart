@@ -1,4 +1,4 @@
-import 'package:deportes/widgets/mapa.dart';
+import 'package:deportes/widgets/MapaVerEspacios.dart';
 import 'package:deportes/widgets/MapaAgregar.dart';
 import 'package:deportes/widgets/menu_anvorgueso.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Espacios Deportivos',
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: MyHomePage(),
     );
   }
@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: MenuAnvorgueso(),
       body: Center(
-        child: MapaAgregar(),
+        child: MapaDeporte(),
       ),
     );
   }
