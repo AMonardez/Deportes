@@ -2,8 +2,14 @@ import 'package:deportes/screens/AgregarEspacio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class MenuAnvorgueso extends StatelessWidget{
+class MenuAnvorgueso extends StatefulWidget{
+  @override
+  _MenuAnvorguesoState createState() => _MenuAnvorguesoState();
+}
+
+class _MenuAnvorguesoState extends State<MenuAnvorgueso> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -26,11 +32,6 @@ class MenuAnvorgueso extends StatelessWidget{
           ),
         ]
       ),
-
-
-
     );
-
   }
-  
 }

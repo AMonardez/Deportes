@@ -1,3 +1,5 @@
+import 'package:deportes/api/zonas_deportivas.dart';
+import 'package:deportes/models/ZonaDeportiva.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -5,23 +7,36 @@ import 'package:map/map.dart';
 import 'package:latlng/latlng.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'DetallesEspacio.dart';
+import '../screens/DetallesZona.dart';
 
-class MapaDeporte extends StatefulWidget{
+class MapaMarcadores extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() => MapaDeporteState();
+  State<StatefulWidget> createState() => MapaMarcadoresState();
 }
 
-class MapaDeporteState extends State<MapaDeporte>{
+class MapaMarcadoresState extends State<MapaMarcadores>{
+  List<ZonaDeportiva> zonas= [];
+  @override
+  void initState(){
+    super.initState();
+    getZonas();
+  }
+
+  void getZonas() async {
+    //Esto está tan trucho que me da verguenza pero hay que cambiar
+    //estos widgets por FutureBuilders
+    //TODO: Cambiar por FutureBuilders.
+    //TODO: Obtener ubicación live y usarla con un StreamBuilder
+    //StreamBuilder sobre FutureBuilder... uff.
+    List<ZonaDeportiva> zd= await ApiZonasDeportivas.getZonasDeportivas();
+    setState(() {
+      zonas=zd;
+    });
+  }
 
   final controller = MapController(
     location: new LatLng(-29.905945639520407, -71.25022183140422),
   );
-  final markers = [
-    LatLng( -29.91394434575477,-71.24884540426193),
-    LatLng(-29.9132845784315,-71.25104820479379),
-    LatLng( -29.913911651108577,-71.25576106243157)
-  ];
 
   void _onDoubleTap() {
     controller.zoom += 1.5;
@@ -53,7 +68,7 @@ class MapaDeporteState extends State<MapaDeporte>{
     }
   }
 
-  Widget _buildMarkerWidget(Offset pos, Color color) {
+  Widget _buildMarkerWidget(Offset pos, Color color, ZonaDeportiva? zonaDeportiva) {
     return Positioned(
       left: pos.dx - 16,
       top: pos.dy - 16,
@@ -61,51 +76,43 @@ class MapaDeporteState extends State<MapaDeporte>{
       height: 24,
       child: GestureDetector(
           onTap: () {
-            print("marcador tocado");
-            detallesEspacio(context);
+            if(zonaDeportiva!=null){
+              print("Marcador tocado");
+              detallesZona(context, zonaDeportiva);
+            }
+            else print("No puede tocarse.");
           },
-          child: Icon(Icons.location_on, size: 40, color: color)),
+          child: Icon(Icons.location_on, size: 40, color: color, ),
+
+      ),
     );
   }
 
   @override
-  initState(){
-    super.initState();
-  }
-  @override
   Widget build(BuildContext context) {
+
     return MapLayoutBuilder(
         controller: controller,
         builder: (context, transformer) {
-          final markerPositions =
-          markers.map(transformer.fromLatLngToXYCoords).toList();
 
-          final markerWidgets = markerPositions.map(
-                (pos) => _buildMarkerWidget(pos, Colors.orange),
-          );
+          final List<Widget> markerWidgets=
+          zonas.map( (z) {
+            return _buildMarkerWidget(transformer.fromLatLngToXYCoords(LatLng(z.latitud, z.longitud)), Colors.orange, z) ;
+          }).toList();
 
           final homeLocation =
           transformer.fromLatLngToXYCoords(
               LatLng(-29.905945639520407, -71.25022183140422));
 
           final homeMarkerWidget =
-          _buildMarkerWidget(homeLocation, Colors.red);
+          _buildMarkerWidget(homeLocation, Colors.red, null);
 
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onDoubleTap: _onDoubleTap,
             onScaleStart: _onScaleStart,
             onScaleUpdate: _onScaleUpdate,
-            onTapUp: (details) {
-              final location =
-              transformer.fromXYCoordsToLatLng(details.localPosition);
-
-              final clicked = transformer.fromLatLngToXYCoords(location);
-
-              print('${location.longitude}, ${location.latitude}');
-              print('${clicked.dx}, ${clicked.dy}');
-              print('${details.localPosition.dx}, ${details.localPosition.dy}');
-            },
+            onTapUp: (details) {},
             child: Listener(
               behavior: HitTestBehavior.opaque,
               onPointerSignal: (event) {
