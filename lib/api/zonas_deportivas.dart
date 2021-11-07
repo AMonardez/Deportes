@@ -50,11 +50,12 @@ class ApiZonasDeportivas {
     final response = await http.post(
       Uri.parse(servidor + 'zonasDeportivas'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        //'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: jsonEncode(zd),
+      body: zd.toJson(),
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       print("addZonasDeportiva StatusCode: " + response.statusCode.toString());
     } else {
       print("addZonasDeportiva StatusCode: " + response.statusCode.toString());

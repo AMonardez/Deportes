@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ZonaDeportiva {
   String nombre = '';
   String descripcion = '';
@@ -60,12 +62,12 @@ class ZonaDeportiva {
 
   Map<String, dynamic> toJson() => {
         'nombre': nombre,
-        'latitud': latitud,
-        'longitud': longitud,
+        'latitud': latitud.toString(),
+        'longitud': longitud.toString(),
         'direccion': direccion,
         'descripcion': descripcion,
-        'deportes':
-            deportes //No he probado si se serializa una lista de esta forma. Debería funcionar.
+        'deportes': jsonEncode(
+            deportes) //No he probado si se serializa una lista de esta forma. Debería funcionar.
         //'id': id,
       };
 }
