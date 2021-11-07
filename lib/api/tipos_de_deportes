@@ -1,0 +1,29 @@
+import 'package:deportes/models/Deporte.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ApiDeportes{
+
+  static String servidor = 'http://3.133.104.32:5000';
+ 
+  // ENDPOINT 3
+  static Future<List<Deporte>> getTiposDeporte() async {
+    final response = await http.get(Uri.parse(servidor + 'tiposDeportes'));
+    print(jsonDecode(response.body));
+
+    if (response.statusCode == 200) {
+      List<Deporte>? tipos_deporte;
+      Iterable jsonVariable = jsonDecode(response.body)['deportes'];
+      tipos_deporte =
+          jsonVariable.map((model) => Deporte.fromJson(model)).toList();
+      return tipos_deporte;
+    } else {
+      throw Exception('Error en obtener la lista de los tipos de deporte');
+    }
+  }
+}
+
+
+  
+ 
