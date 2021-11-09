@@ -46,9 +46,9 @@ class ApiZonasDeportivas {
   */
 
   // ENDPOINT 2:
-  static void addZonaDeportiva(ZonaDeportiva zd) async {
+  static Future<bool> addZonaDeportiva(ZonaDeportiva zd) async {
     final response = await http.post(
-      Uri.parse(servidor + 'zonasDeportivas'),
+      Uri.parse(servidor + '/zonasDeportivas'),
       headers: <String, String>{
         //'Content-Type': 'application/json; charset=UTF-8',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -57,9 +57,12 @@ class ApiZonasDeportivas {
     );
     if (response.statusCode == 200) {
       print("addZonasDeportiva StatusCode: " + response.statusCode.toString());
+      return true;
     } else {
       print("addZonasDeportiva StatusCode: " + response.statusCode.toString());
+      return false;
       throw Exception('Error al agregar la zona deportiva');
+
     }
   }
 }

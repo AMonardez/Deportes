@@ -10,28 +10,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../screens/DetallesZona.dart';
 
 class MapaMarcadores extends StatefulWidget{
+  List<ZonaDeportiva> zonas=[];
   @override
   State<StatefulWidget> createState() => MapaMarcadoresState();
+
+  MapaMarcadores(this.zonas);
 }
 
 class MapaMarcadoresState extends State<MapaMarcadores>{
-  List<ZonaDeportiva> zonas= [];
+
   @override
   void initState(){
     super.initState();
-    getZonas();
-  }
-
-  void getZonas() async {
-    //Esto está tan trucho que me da verguenza pero hay que cambiar
-    //estos widgets por FutureBuilders
-    //TODO: Cambiar por FutureBuilders.
-    //TODO: Obtener ubicación live y usarla con un StreamBuilder
-    //StreamBuilder sobre FutureBuilder... uff.
-    List<ZonaDeportiva> zd= await ApiZonasDeportivas.getZonasDeportivas();
-    setState(() {
-      zonas=zd;
-    });
   }
 
   final controller = MapController(
@@ -68,7 +58,9 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
     }
   }
 
-  Widget _buildMarkerWidget(Offset pos, Color color, ZonaDeportiva? zonaDeportiva) {
+  Widget _buildMarkerWidget({required Offset pos, ZonaDeportiva? zonaDeportiva,
+      required Color color, double iconSize=40,
+      IconData? icono=Icons.location_on}) {
     return Positioned(
       left: pos.dx - 16,
       top: pos.dy - 16,
@@ -82,7 +74,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
             }
             else print("No puede tocarse.");
           },
-          child: Icon(Icons.location_on, size: 40, color: color, ),
+          child: Icon(icono, size: iconSize, color: color, ),
 
       ),
     );
@@ -94,18 +86,24 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
     return MapLayoutBuilder(
         controller: controller,
         builder: (context, transformer) {
-
           final List<Widget> markerWidgets=
-          zonas.map( (z) {
-            return _buildMarkerWidget(transformer.fromLatLngToXYCoords(LatLng(z.latitud, z.longitud)), Colors.orange, z) ;
+          widget.zonas.map( (z) {
+            return _buildMarkerWidget(
+                pos: transformer.fromLatLngToXYCoords(LatLng(z.latitud, z.longitud)),
+                color: Colors.orange,
+                zonaDeportiva: z,
+              ) ;
           }).toList();
-
           final homeLocation =
           transformer.fromLatLngToXYCoords(
               LatLng(-29.905945639520407, -71.25022183140422));
 
           final homeMarkerWidget =
-          _buildMarkerWidget(homeLocation, Colors.red, null);
+          _buildMarkerWidget(
+              pos:homeLocation,
+              color: Colors.blue,
+              zonaDeportiva: null,
+              icono: Icons.album, iconSize: 20);
 
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -118,7 +116,6 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
               onPointerSignal: (event) {
                 if (event is PointerScrollEvent) {
                   final delta = event.scrollDelta;
-
                   controller.zoom -= delta.dy / 1000.0;
                   setState(() {});
                 }
@@ -128,20 +125,8 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
                   Map(
                     controller: controller,
                     builder: (context, x, y, z) {
-                      //Legal notice: This url is only used for demo and educational purposes. You need a license key for production use.
-
-                      //Google Maps
-                      /*final url =
-                          'https://www.google.com/maps/vt/pb=!1m4!1m3!1i$z!2i$x!3i$y!2m3!1e0!2sm!3i420120488!3m7!2sen!5e1105!12m4!1e68!2m2!1sset!2sRoadmap!4e0!5m1!1e0!23i4111425';
-                      */
-                      //Mapbox Streets
-                      final url =
-                          'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$z/$x/$y?access_token=pk.eyJ1IjoiYW9raW10IiwiYSI6ImNrdjh5amRlczViZmUydXE5aDI0bHM1NzgifQ.tQyUT2BakFIVJEgx_A_K6w';
-
-                      return CachedNetworkImage(
-                        imageUrl: url,
-                        fit: BoxFit.cover,
-                      );
+                      final url = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/$z/$x/$y?access_token=pk.eyJ1IjoiYW9raW10IiwiYSI6ImNrdjh5amRlczViZmUydXE5aDI0bHM1NzgifQ.tQyUT2BakFIVJEgx_A_K6w';
+                      return CachedNetworkImage(imageUrl: url, fit: BoxFit.cover);
                     },
                   ),
                   homeMarkerWidget,

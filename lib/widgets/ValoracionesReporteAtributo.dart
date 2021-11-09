@@ -49,12 +49,12 @@ class _ValoracionEspacioState extends State<ValoracionEspacio> {
           starOffColor: const Color(0xffe7e8ea),
           starColor: Colors.yellow,
           onValueChanged: (double val) {
-            print(val);
+            /*print(val);
             widget.valoracion=val;
             setState(() {
               widget.valoracion=val;
               }
-            );
+            );*/
 
           }
         ),

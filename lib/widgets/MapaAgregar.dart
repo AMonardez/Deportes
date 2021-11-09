@@ -6,21 +6,31 @@ import 'package:latlng/latlng.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MapaAgregar extends StatefulWidget{
+  final Function(double, double) onMarkerMoved;
+  //Al fin aprendí a usar bien los ✨Callbacks✨ /o/
+
+  MapaAgregar({
+    required double latitude,
+    required double longitude,
+    required this.onMarkerMoved(double latitud, double longitud)
+  });
+
   @override
   State<StatefulWidget> createState() => MapaAgregarState();
+
 }
 
 class MapaAgregarState extends State<MapaAgregar> {
-
-  @override
-  initState() {
-    super.initState();
-  }
   double latitud=-29.905945639520407;
   double longitud=-71.25022183140422;
   final controller = MapController(
     location: LatLng(-29.905945639520407, -71.25022183140422),
   );
+
+  @override
+  initState() {
+    super.initState();
+  }
 
   void _onDoubleTap() {
     controller.zoom += 0.5;
@@ -64,7 +74,7 @@ class MapaAgregarState extends State<MapaAgregar> {
           onTap: (){
             print("Marcador tocado");
           },
-        child: Icon(Icons.location_on, size: 40, color: color),
+        child: Icon(Icons.gps_fixed, size: 32, color: color),
       ),
     );
   }
@@ -92,12 +102,13 @@ class MapaAgregarState extends State<MapaAgregar> {
 
               final clicked = transformer.fromLatLngToXYCoords(location);
 
-              print('${location.longitude}, ${location.latitude}');
+              /*print('${location.longitude}, ${location.latitude}');
               print('${clicked.dx}, ${clicked.dy}');
-              print('${details.localPosition.dx}, ${details.localPosition.dy}');
+              print('${details.localPosition.dx}, ${details.localPosition.dy}');*/
               setState(() {
                 latitud=location.latitude;
                 longitud=location.longitude;
+                widget.onMarkerMoved(latitud, longitud);
               });
             },
             child: Listener(
