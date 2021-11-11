@@ -5,12 +5,35 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+Widget toast = Container(
+  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(25.0),
+    color: Colors.orangeAccent,
+  ),
+  child: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.check),
+      SizedBox(
+        width: 12.0,
+      ),
+      Text("Valoración enviada exitosamente."),
+    ],
+  ),
+);
+
+
+
 Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, Map<String, double> valoraciones) async {
   //String deporte= "Fútbol";
   List<String> atributos=[];
   valoraciones.forEach((key, value) {atributos.add(key);});
   List<double> puntuaciones=List<double>.filled(atributos.length, 0.0);
-  
+
+  FToast fToast =FToast().init(ctx);
+
+
   return showDialog<void> (
       context: ctx,
       barrierDismissible: true,
@@ -70,13 +93,9 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
                   onPressed: () {
                     print("Guardar");
                     //ValoracionesApi.addValoracion(zd.id, atributos, puntuaciones);
-                    //TODO: Agregar logica para esto.
+                    //TODO: Agregar logica para manejar toast de exito y error.
                     Navigator.pop(context);
-                    //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Valoración enviada exitosamente.")));
-                    //TODO: Buscar una forma de mostrarle al usuario un mensaje que la valoración fue
-                    //enviada exitosamente. FlutterToast en web funca raro?,
-                    //Snackbar sale detrás de las ventanas modales.
-                    //Fluttertoast.showToast(msg: "Enviando Valoración...");
+                    fToast.showToast(child: toast);
 
                   },
                 ),
@@ -87,4 +106,8 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
         );
       }
   );
+
+
+
+
 }

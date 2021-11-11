@@ -9,11 +9,18 @@ import 'package:flutter/widgets.dart';
 class MapaZonasDeportivas extends StatefulWidget {
   @override
   _MapaZonasDeportivasState createState() => _MapaZonasDeportivasState();
-
 }
 
 class _MapaZonasDeportivasState extends State<MapaZonasDeportivas> {
   Future<List<ZonaDeportiva>> lzd= Future.value([]);
+  String deporteSeleccionado='all';
+
+  List<ZonaDeportiva> filtrar(List<ZonaDeportiva>l, String deporte){
+    if(deporte=='all') return l;
+    List<ZonaDeportiva> aux=[];
+    for(var z in l) if(z.deportes.contains(deporte)) aux.add(z);
+    return aux;
+  }
 
   @override
   void initState() {
@@ -47,21 +54,27 @@ class _MapaZonasDeportivasState extends State<MapaZonasDeportivas> {
 
 
       body: Center(
-        child: Stack(
-          children: [FutureBuilder<List<ZonaDeportiva>>(
-            initialData: [],
-            future: lzd,
-            builder: (ctx, snapshot){
-              if(snapshot.hasData) return MapaMarcadores(snapshot.data!);
-              else if(snapshot.hasError) return Text("Error de Future.");
-              else if (snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
-              else return Text("Pasas cosaron");
-            }
-          ),
-          Container(
-            alignment: Alignment.bottomCenter,
-              child: FiltroDeportes())
-          ],
+        child: FutureBuilder<List<ZonaDeportiva>>(
+          initialData: [],
+          future: lzd,
+          builder: (ctx, snapshot){
+            if(snapshot.hasData) return
+              Stack(children: [
+                MapaMarcadores(filtrar(snapshot.data!, deporteSeleccionado)),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: FiltroDeportes(
+                    onTap: (dep) {setState(() {
+                      deporteSeleccionado=dep;
+                    }); },
+                  )
+                )
+              ]
+            );
+            else if(snapshot.hasError) return Text("Error de Future.");
+            else if (snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
+            else return Text("Pasas cosaron");
+          }
         ),
       ),
     );
