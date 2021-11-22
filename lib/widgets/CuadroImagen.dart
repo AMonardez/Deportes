@@ -16,7 +16,7 @@ class CuadroImagen extends StatelessWidget{
             height:70,
             width:70,
             alignment: Alignment.center,
-            child: CircularProgressIndicator(color: Colors.orangeAccent, strokeWidth: 2.0,),
+            child: CircularProgressIndicator(color: Theme.of(context).accentColor, strokeWidth: 2.0,),
           ),
           Center(
             child: Container(

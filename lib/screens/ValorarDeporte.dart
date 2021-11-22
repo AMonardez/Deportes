@@ -2,36 +2,15 @@ import 'package:deportes/api/valoraciones_deportes.dart';
 import 'package:deportes/models/Reporte.dart';
 import 'package:deportes/models/Valoracion.dart';
 import 'package:deportes/models/ZonaDeportiva.dart';
+import 'package:deportes/widgets/Toasts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-Widget funToast({required String texto, required IconData iconData,required Color color}) => Container(
-  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(25.0),
-    color: color,
-  ),
-  child: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(iconData),
-      SizedBox(
-        width: 12.0,
-      ),
-      Text(texto),
-    ],
-  ),
-);
-
 
 Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, List<String> atributos) async {
   //String deporte= "Fútbol";
   List<double> puntuaciones=List<double>.filled(atributos.length, 0.0);
   int idDeporteEnZona = zd.idDeporteEnZona[zd.deportes.indexOf(deporte)];
-
-  FToast fToast =FToast().init(ctx);
 
   return showDialog<void> (
       context: ctx,
@@ -77,7 +56,7 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
                               const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
                               valueLabelMargin: const EdgeInsets.only(right: 8),
                               starOffColor: const Color(0xffe7e8ea),
-                              starColor: Colors.orange,
+                              starColor: Theme.of(context).accentColor,
                               onValueChanged: (double val) => setState(() => puntuaciones[i]=val),
                           ),
                         ]
@@ -90,7 +69,7 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
               actionsPadding: EdgeInsets.all(10),
               actions: [
                 MaterialButton(
-                  child: Text("ENVIAR", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                  child: Text("ENVIAR", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
                   onPressed: () async {
                     print("Guardar");
                     Map<String, double> vals={};
@@ -101,9 +80,9 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
                     bool exitoso= await ValoracionesApi.addValoracion(v);
                     if(exitoso){
                       Navigator.pop(context);
-                      fToast.showToast(child: funToast(texto: "Valoración enviada exitosamente.", iconData: Icons.check, color: Colors.orangeAccent));
+                      avisarToast(buildContext: ctx,texto: "Valoración enviada exitosamente.", iconData: Icons.check, color: Theme.of(context).accentColor);
                     }
-                    else fToast.showToast(child: funToast(texto: "Error al enviar valoración.", iconData: Icons.warning, color: Colors.blueGrey));
+                    else avisarToast(buildContext: ctx,texto: "Error al enviar valoración.", iconData: Icons.warning, color: Colors.blueGrey);
                   },
                 ),
               ]

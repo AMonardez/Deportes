@@ -13,7 +13,7 @@ Future<void> detallesZona(BuildContext ctx, ZonaDeportiva zonaDeportiva) async {
   print("ZonaDeportiva: "+ jsonEncode(zonaDeportiva));
   //Future<List<Reporte>> frp = Future.delayed(Duration(seconds:3), ()=>Reporte.reportesDePrueba(zonaDeportiva.deportes) );
   Future<List<Reporte>> frp = ValoracionesApi.getReportes(zonaDeportiva);
-
+  Color colorDestacado= Theme.of(ctx).accentColor;
   return showDialog<void> (
       context: ctx,
       barrierDismissible: true,
@@ -27,19 +27,19 @@ Future<void> detallesZona(BuildContext ctx, ZonaDeportiva zonaDeportiva) async {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                     Tooltip(child:Icon(Icons.sports_soccer,
-                        color: zonaDeportiva.deportes.contains("futbol")?Colors.orange:Colors.black12),
+                        color: zonaDeportiva.deportes.contains("futbol")?colorDestacado:Colors.black12),
                         message: "Futbol"),
                     Tooltip(child:Icon(Icons.sports_basketball,
-                        color: zonaDeportiva.deportes.contains("basquetbol")?Colors.orange:Colors.black12),
+                        color: zonaDeportiva.deportes.contains("basquetbol")?colorDestacado:Colors.black12),
                         message: "Basketball"),
                     Tooltip(child:Icon(Icons.fitness_center,
-                        color: zonaDeportiva.deportes.contains("calistenia")?Colors.orange:Colors.black12),
+                        color: zonaDeportiva.deportes.contains("calistenia")?colorDestacado:Colors.black12),
                         message: "Calistenia"),//Calistenia?
                     Tooltip(child:Icon(Icons.sports_tennis,
-                        color: zonaDeportiva.deportes.contains("tenis")?Colors.orange:Colors.black12),
+                        color: zonaDeportiva.deportes.contains("tenis")?colorDestacado:Colors.black12),
                         message: "Tenis"),
                     Tooltip(child:Icon(Icons.skateboarding,
-                        color: zonaDeportiva.deportes.contains("skate")?Colors.orange:Colors.black12),
+                        color: zonaDeportiva.deportes.contains("skate")?colorDestacado:Colors.black12),
                         message: "Skateboard"),
                     ],
                   ),
@@ -55,7 +55,7 @@ Future<void> detallesZona(BuildContext ctx, ZonaDeportiva zonaDeportiva) async {
                       future: frp,
                       builder: (BuildContext context, AsyncSnapshot<List<Reporte>> snapshot) {
                         if(snapshot.connectionState==ConnectionState.waiting)
-                          return LinearProgressIndicator(minHeight: 3.0, color: Colors.orangeAccent,);
+                          return LinearProgressIndicator(minHeight: 3.0, color: Theme.of(ctx).accentColor,);
                         else if(snapshot.hasError)
                           return Text("Error al consultar reportes.");
                         else if(snapshot.hasData)

@@ -18,31 +18,37 @@ class _MenuAnvorguesoState extends State<MenuAnvorgueso> {
       key: _scaffoldKey,
       child: ListView(
         children: <Widget>[
-          DrawerHeader(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Placeholder(fallbackWidth: 200, fallbackHeight: 100),
-                Text("Espacios Deportivos")])
+          Container(
+            height:270,
+            child: DrawerHeader(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/logo.png', width:200, height:200),
+                    //Icon(Icons.location_city_sharp, size: 100,),
+                  Text("Zonas Deportivas")])
+            ),
           ),
           ListTile(
-            leading: Icon(Icons.add),
-            title: Text("Agregar Espacio Deportivo"),
+            leading: Icon(Icons.add_location_alt, color: Theme.of(context).accentColor),
+            title: Text("Agregar Zona Deportiva"),
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => AgregarEspacio()));
             },
           ),
+          Divider(),
           ListTile(
-            leading: Icon(Icons.check),
-            title: Text("Location test"),
+            leading: Icon(Icons.check, color: Theme.of(context).accentColor),
+            title: Text("Location StreamListener test"),
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => ListenLocationWidget()));
             },
           ),
           ListTile(
-            leading: Icon(Icons.check),
-            title: Text("Location test"),
+            leading: Icon(Icons.check, color: Theme.of(context).accentColor),
+            title: Text("LocationPermission test"),
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => PermissionStatusWidget()));

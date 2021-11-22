@@ -13,6 +13,8 @@ class AgregarEspacio extends StatefulWidget {
 }
 
 class AgregarEspacioState extends State<AgregarEspacio> {
+  bool guardando =false;
+
   final _formKey = GlobalKey<FormState>();
   var nombreController = TextEditingController();
   var descripcionController = TextEditingController();
@@ -55,6 +57,10 @@ class AgregarEspacioState extends State<AgregarEspacio> {
         deportes: getDeportesSeleccionados(),
       );
       //print(zd.toString());
+      setState(() {
+        guardando=true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Guardando Zona Deportiva...")));
       bool agregado = await ApiZonasDeportivas.addZonaDeportiva(zd, imagenes);
       if(agregado){
         Navigator.pop(context);
@@ -62,6 +68,9 @@ class AgregarEspacioState extends State<AgregarEspacio> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Zona deportiva agregada exitosamente.")));
       }
       else{
+        setState(() {
+          guardando=false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error al guardar.")));
       }
     }
@@ -73,13 +82,13 @@ class AgregarEspacioState extends State<AgregarEspacio> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Agregar Zona Deportiva"),
-          backgroundColor: Colors.black87,
-          foregroundColor: Colors.white70,
+          backgroundColor: Theme.of(context).accentColor,
+          foregroundColor: Colors.white,
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.save),
                 tooltip: "Guardar",
-                onPressed: () => guardar())
+                onPressed: () => guardando?null:guardar())
           ],
         ),
         body: Form(
@@ -150,17 +159,18 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                             child: ToggleButtons(
                               isSelected: deportesSeleccionados,
                               children: deportesIconos,
-                              selectedColor: Colors.orange,
+                              selectedColor: Theme.of(context).accentColor,
                               //fillColor: Color.fromARGB(160, 237, 191, 133),
                               fillColor: Colors.white70,
                               onPressed: (int index) {
                                 //Regla: Una zona deportiva no puede no tener deportes.
-                                //Cambiar esto por algo más elegante.
                                 //Esto en realidad evita que exista deportesSeleccionados
                                 //completo con false, pero esto debería ser un validador.
                                 //Hay que extender ToggleButtons con un mixin para agregarle
-                                //un validador pero aun no sabo como hacerlo.
-                                if (deportesSeleccionados.contains(true)) {
+                                //un validador pero aun no sabo como hacerlo,
+                                //asi que se queda así nomas.
+                                int contadorselec= deportesSeleccionados.where((element) => element==true).toList().length;
+                                if (!(contadorselec==1 && deportesSeleccionados[index]==true)) {
                                   setState(() {
                                     deportesSeleccionados[index] =
                                         !deportesSeleccionados[index];

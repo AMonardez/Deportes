@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'CuadroImagen.dart';
 import 'package:swipe_image_gallery/swipe_image_gallery.dart';
 
+import 'Toasts.dart';
+
 class FilaImagenes extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => FilaImagenesState();
@@ -70,13 +72,13 @@ class FilaImagenesState extends State<FilaImagenes>{
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             ...hacerMiniaturas(),
-            IconButton(icon: Icon(Icons.add_box), onPressed: () {agregarImagen();  },)
+            IconButton(icon: Icon(Icons.add_box), onPressed: () {agregarImagen(context);  },)
 
           ]
       ),
     );
   }
-  void agregarImagen() async {
+  void agregarImagen(BuildContext ctx) async {
     List<Uint8List> imagenes =[];
     print(widget.zonaDeportiva.id.toString());
     final ImagePicker _picker = ImagePicker();
@@ -85,10 +87,17 @@ class FilaImagenesState extends State<FilaImagenes>{
     else {
       for(XFile a in images){
         imagenes.add(await a.readAsBytes());
-        uploadImagenes(imagenes, widget.zonaDeportiva);
-        //TODO: Agregar las urls de vuelta de uploadImagenes a la lista de urls de widget.ZonaDeportiva.urlimagenes.
         setState(() {});
       }
+      avisarToast(buildContext: ctx,texto: "Subiendo imágenes...", iconData: Icons.add_to_photos, color: Colors.grey);
+      List<String> nuevarutaimagen = await uploadImagenes(imagenes, widget.zonaDeportiva);
+      if(nuevarutaimagen.length>0){
+        avisarToast(buildContext: ctx,texto: "Imágenes cargadas exitosamente.", iconData: Icons.check, color: Theme.of(context).accentColor);
+        setState(() {
+          widget.zonaDeportiva.urlimagenes.addAll(nuevarutaimagen);
+        });
+      }
+      else avisarToast(buildContext: ctx,texto: "Ocurrió un error al cargar las imágenes.", iconData: Icons.warning, color: Colors.blueGrey);
     }
   }
 }

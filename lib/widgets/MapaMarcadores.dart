@@ -170,7 +170,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
               widget.zonas.map( (z) {
                 return _buildMarkerWidget(
                     pos: transformer.fromLatLngToXYCoords(LatLng(z.latitud, z.longitud)),
-                    color: Colors.orange,
+                    color: Theme.of(context).accentColor,
                     zonaDeportiva: z,
                   ) ;
               }).toList();

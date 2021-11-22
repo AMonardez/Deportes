@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:deportes/models/ZonaDeportiva.dart';
 
-Future<bool> uploadImagenes(List<Uint8List> imagenes, ZonaDeportiva zd) async{
+Future<List<String>> uploadImagenes(List<Uint8List> imagenes, ZonaDeportiva zd) async{
   print("Endpoint uploadImagenes");
   String servidor = dotenv.env['SERVER_URL']!;
   // http://3.133.104.32:5000/zonasDeportivas/getZonasDeportivas
@@ -16,5 +16,9 @@ Future<bool> uploadImagenes(List<Uint8List> imagenes, ZonaDeportiva zd) async{
   }
   var response = await request.send();
   print("Response statusCode: " + response.statusCode.toString());
-  return response.statusCode==200;
+  //TODO: Leer y retornar las urls de las imagenes subidas.
+  //Lo de la imagen de donfrancisco es provisorio.
+  String imagendonfrancisco='https://s3-deportes.s3.sa-east-1.amazonaws.com/1637545124552_Plaza_de_la_Juventud0.jpg';
+  if(response.statusCode==200) return [imagendonfrancisco];
+  else return [];
 }

@@ -16,7 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Espacios Deportivos',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primaryColor: Colors.green[800],
+        accentColor: Colors.green[500],
+        backgroundColor: Colors.grey[300],
         fontFamily: GoogleFonts.jost().fontFamily,
         textTheme: GoogleFonts.jostTextTheme()
       ),

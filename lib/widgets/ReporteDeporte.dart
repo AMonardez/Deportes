@@ -27,7 +27,7 @@ class ReporteDeporte extends StatelessWidget {
             Text(Reporte.getNombreBonito(reporte.deporte), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18), textAlign: TextAlign.left ),
             MaterialButton(
                 onPressed: (){valorarDeporte(context, zonaDeportiva, reporte.deporte, reporte.atributos);},
-                child: Text("VALORAR", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
+                child: Text("VALORAR", style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).accentColor))),
           ],
         ),
         ...aux,

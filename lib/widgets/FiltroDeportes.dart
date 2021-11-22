@@ -40,7 +40,7 @@ class _FiltroDeportesState extends State<FiltroDeportes> {
             message: Reporte.getNombreBonito(listaDeportes[i]),
             child: Container(
               decoration: BoxDecoration(
-                color: activado==i?Colors.orange:Colors.transparent,
+                color: activado==i?Theme.of(context).accentColor:Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -53,7 +53,7 @@ class _FiltroDeportesState extends State<FiltroDeportes> {
                 }),
                 color: activado==i?Colors.white:Colors.black,
                 enableFeedback: true,
-                hoverColor: Colors.orangeAccent,
+                hoverColor: Theme.of(context).accentColor,
       ),
             ),
           ) );

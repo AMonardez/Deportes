@@ -89,7 +89,7 @@ class MapaAgregarState extends State<MapaAgregar> {
           transformer.fromLatLngToXYCoords(LatLng(latitud, longitud));
 
           final homeMarkerWidget =
-          _buildMarkerWidget(homeLocation, Colors.orange);
+          _buildMarkerWidget(homeLocation, Theme.of(context).accentColor);
 
           return GestureDetector(
             behavior: HitTestBehavior.translucent,
