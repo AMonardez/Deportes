@@ -12,12 +12,22 @@ class ValoracionesApi{
   static Future<bool> addValoracion(Valoracion v) async{
     //TODO: Arreglar esto.
     print("Llamada addValoracion");
-    String endpoint= "/valorizaciones";
-    var response = await http.post(Uri.parse(servidor + endpoint),
-        body: jsonEncode(v));
-    print("jsonEncode: "+ jsonEncode(v));
-    print("addValoracion: "+ response.statusCode.toString());
-    print("Response:" + response.body);
+    String endpoint= "/valorizaciones/";
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    var request = http.Request('POST', Uri.parse(servidor + endpoint));
+    request.bodyFields = {
+      'id_deporte_en_zona': '30',
+      'nombre_tipo_deporte': ' calistenia',
+      'valorizaciones': ' [{"variable": "iluminacion", "puntuacion": 5}, {"variable": "variedad de maquinas", "puntuacion": 4}, {"variable": "estado maquinas", "puntuacion": 0}]',
+      'id_usuario': ' 120'
+    };
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    print("Statuscode: "+response.statusCode.toString());
+    var body = await response.stream.bytesToString();
+    print("body: "+body.toString());
     return response.statusCode==200;
   }
 
