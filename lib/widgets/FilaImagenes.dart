@@ -55,7 +55,14 @@ class FilaImagenesState extends State<FilaImagenes>{
                 ),
               ).show();
 
-            }),
+            }, onDeleteTap: () async {
+              bool cosa = await deleteImagen(widget.zonaDeportiva.urlimagenes[i], widget.zonaDeportiva.id);
+              if(cosa) avisarToast(buildContext: context, texto: "Imagen eliminada.", iconData: Icons.delete, color: Colors.red[900]!);
+              widget.zonaDeportiva.urlimagenes.removeAt(i);
+              setState(() {
+              });
+              //print("hola deletetap");
+            },),
           )
       );
     }

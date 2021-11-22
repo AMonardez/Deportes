@@ -5,7 +5,8 @@ class CuadroImagen extends StatelessWidget{
   //String? url='https://picsum.photos/250?image=9';
   final String url;
   final Function onTap;
-  CuadroImagen({required this.url, required this.onTap});
+  final Function onDeleteTap;
+  CuadroImagen({required this.url, required this.onTap, required this.onDeleteTap});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,14 @@ class CuadroImagen extends StatelessWidget{
                 ),
               ),
             ),
+
+          ),
+          Container(
+            height:70,
+            width:70,
+            alignment: Alignment.topRight,
+            child: InkWell(child: Icon(Icons.delete, size: 16, color: Colors.red[800]), onTap: (){onDeleteTap();},)
+            //IconButton(onPressed: ()=>onDeleteTap, icon: Icon(Icons.delete), iconSize: 14, splashRadius: 10,),
           ),
         ],
       ),
