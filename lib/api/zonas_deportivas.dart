@@ -44,15 +44,50 @@ class ApiZonasDeportivas {
   */
 
   // ENDPOINT 2:
-  static Future<bool> addZonaDeportiva(ZonaDeportiva zd, List<Uint8List> imagenes) async {
-    var request = http.MultipartRequest('POST', Uri.parse(servidor + '/zonasDeportivas'));
+  static Future<bool> addZonaDeportiva(
+      ZonaDeportiva zd, List<Uint8List> imagenes) async {
+    var request =
+        http.MultipartRequest('POST', Uri.parse(servidor + '/zonasDeportivas'));
     request.fields.addAll(zd.toJson());
-    for(int i=0; i<imagenes.length; i++){
+    for (int i = 0; i < imagenes.length; i++) {
       var imagen = http.MultipartFile.fromBytes('imagenes', imagenes[i],
-          filename: zd.nombre.replaceAll(' ', '_') +'_'+ i.toString()+'.jpg');
+          filename:
+              zd.nombre.replaceAll(' ', '_') + '_' + i.toString() + '.jpg');
       request.files.add(imagen);
     }
     var response = await request.send();
-    return response.statusCode==200;
+    return response.statusCode == 200;
+  }
+
+  // ENDPOINT3 BORRAR
+  static void deleteZonaDeportiva(int id) async {
+    Map id_zona_deportiva = {'id': id.toString()};
+    final response = await http.post(
+      Uri.parse(servidor + 'zonasDeportivas/delete'),
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: id_zona_deportiva,
+    );
+  }
+
+  // ENDPOINT4 ACTUALIZAR
+
+  static void actualizarZonaDeportiva(
+      int id, ZonaDeportiva zona_deportiva) async {
+    Map zona_deportiva_actualizada = {
+      'id': id.toString(),
+      'nombre': zona_deportiva.nombre,
+      'direccion': zona_deportiva.direccion,
+      'lat': zona_deportiva.latitud.toString(),
+      'lon': zona_deportiva.longitud.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(servidor + 'zonasDeportivas/update'),
+      headers: <String, String>{
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: zona_deportiva_actualizada,
+    );
   }
 }
