@@ -48,7 +48,7 @@ class ApiZonasDeportivas {
     var request = http.MultipartRequest('POST', Uri.parse(servidor + '/zonasDeportivas'));
     request.fields.addAll(zd.toJson());
     for(int i=0; i<imagenes.length; i++){
-      var imagen = http.MultipartFile.fromBytes('imagenes', imagenes[0],
+      var imagen = http.MultipartFile.fromBytes('imagenes', imagenes[i],
           filename: zd.nombre.replaceAll(' ', '_') +'_'+ i.toString()+'.jpg');
       request.files.add(imagen);
     }

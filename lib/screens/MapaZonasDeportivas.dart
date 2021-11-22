@@ -34,7 +34,11 @@ class _MapaZonasDeportivasState extends State<MapaZonasDeportivas> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text("Espacios Deportivos en tu Ciudad", style: TextStyle(color: Colors.white)),
+        title: Row(
+          children: [
+            Flexible(child: Text("Zonas Deportivas en tu Ciudad", style: TextStyle(color: Colors.white))),
+          ],
+        ),
         backgroundColor: Colors.black26,
         foregroundColor: Colors.white,
         elevation: 0.0,

@@ -84,13 +84,10 @@ class MapaAgregarState extends State<MapaAgregar> {
     return MapLayoutBuilder(
         controller: controller,
         builder: (context, transformer) {
-
           final homeLocation =
           transformer.fromLatLngToXYCoords(LatLng(latitud, longitud));
-
           final homeMarkerWidget =
           _buildMarkerWidget(homeLocation, Theme.of(context).accentColor);
-
           return GestureDetector(
             behavior: HitTestBehavior.translucent,
             onDoubleTap: _onDoubleTap,
@@ -99,12 +96,6 @@ class MapaAgregarState extends State<MapaAgregar> {
             onTapUp: (details) {
               final location =
               transformer.fromXYCoordsToLatLng(details.localPosition);
-
-              final clicked = transformer.fromLatLngToXYCoords(location);
-
-              /*print('${location.longitude}, ${location.latitude}');
-              print('${clicked.dx}, ${clicked.dy}');
-              print('${details.localPosition.dx}, ${details.localPosition.dy}');*/
               setState(() {
                 latitud=location.latitude;
                 longitud=location.longitude;
