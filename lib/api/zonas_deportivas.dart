@@ -1,13 +1,11 @@
 import 'package:deportes/models/ZonaDeportiva.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:typed_data';
 
 class ApiZonasDeportivas {
-  static String servidor = 'http://3.133.104.32:5000';
-  //TODO: Hacer que la url base se pueda modificar y guardable en el Storage.
-  // No se si te refieres aca a usar a import 'package:localstorage/localstorage.dart';
-  //a partir de la dependencia localstorage: ^4.0.0+1 de alguna version o un archivo de enviroment
+  static String servidor = dotenv.env['SERVER_URL']!;
 
   static Future<List<ZonaDeportiva>> getZonasDeportivas() async {
     final response = await http
@@ -37,7 +35,7 @@ class ApiZonasDeportivas {
       List<ZonaDeportiva>? zonas_deportivas;
       Iterable jsonVariable = jsonDecode(response.body)['zonas_deportivas'];
       zonas_deportivas =
-          jsonVariable.map((model) => ZonaDeportiva.fromJson(model)).toList();
+          jsovar ble.map((model) => ZonaDeportiva.fromJson(model)).toList();
       return zonas_deportivas;
     } else {
       throw Exception('Error en obtener la lista de zonas deportivas');
@@ -46,23 +44,15 @@ class ApiZonasDeportivas {
   */
 
   // ENDPOINT 2:
-  static Future<bool> addZonaDeportiva(ZonaDeportiva zd) async {
-    final response = await http.post(
-      Uri.parse(servidor + '/zonasDeportivas'),
-      headers: <String, String>{
-        //'Content-Type': 'application/json; charset=UTF-8',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: zd.toJson(),
-    );
-    if (response.statusCode == 200) {
-      print("addZonasDeportiva StatusCode: " + response.statusCode.toString());
-      return true;
-    } else {
-      print("addZonasDeportiva StatusCode: " + response.statusCode.toString());
-      return false;
-      throw Exception('Error al agregar la zona deportiva');
-
+  static Future<bool> addZonaDeportiva(ZonaDeportiva zd, List<Uint8List> imagenes) async {
+    var request = http.MultipartRequest('POST', Uri.parse(servidor + '/zonasDeportivas'));
+    request.fields.addAll(zd.toJson());
+    for(int i=0; i<imagenes.length; i++){
+      var imagen = http.MultipartFile.fromBytes('imagenes', imagenes[0],
+          filename: zd.nombre.replaceAll(' ', '_') +'_'+ i.toString()+'.jpg');
+      request.files.add(imagen);
     }
+    var response = await request.send();
+    return response.statusCode==200;
   }
 }

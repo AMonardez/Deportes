@@ -1,20 +1,18 @@
+import 'dart:convert';
+
+import 'package:deportes/api/valoraciones_deportes.dart';
 import 'package:deportes/models/Reporte.dart';
 import 'package:deportes/models/ZonaDeportiva.dart';
-import 'package:deportes/widgets/ValoracionesReporteAtributo.dart';
+import 'package:deportes/widgets/FilaImagenes.dart';
+import 'package:deportes/widgets/ReporteDeporte.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'ValorarDeporte.dart';
-
 Future<void> detallesZona(BuildContext ctx, ZonaDeportiva zonaDeportiva) async {
-  print(zonaDeportiva.deportes.toString());
-  //TODO: Cambiar por la llamada a la api para obtener el reporte de una zona deportiva.
-  //Me entrega los deportes, con sus atributos y promedios de valoraciones.
-  Reporte rp = Reporte.dePrueba(zonaDeportiva.deportes);
-
-  List<Widget> secciones = [];
-  rp.atributos.forEach((key, value) {secciones.add(ReporteDeporte(zonaDeportiva: zonaDeportiva, nombreDeporte:key, valoraciones: value));});
+  print("ZonaDeportiva: "+ jsonEncode(zonaDeportiva));
+  //Future<List<Reporte>> frp = Future.delayed(Duration(seconds:3), ()=>Reporte.reportesDePrueba(zonaDeportiva.deportes) );
+  Future<List<Reporte>> frp = ValoracionesApi.getReportes(zonaDeportiva);
 
   return showDialog<void> (
       context: ctx,
@@ -50,62 +48,30 @@ Future<void> detallesZona(BuildContext ctx, ZonaDeportiva zonaDeportiva) async {
                   Text(zonaDeportiva.descripcion, style: TextStyle(fontStyle: FontStyle.italic)),
                   Padding(
                     padding: EdgeInsets.only(left:0, right: 0, top: 20, bottom:20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Placeholder(fallbackHeight: 50, fallbackWidth: 50,color: Colors.orange),
-                        Placeholder(fallbackHeight: 50, fallbackWidth: 50,color: Colors.redAccent),
-                        Placeholder(fallbackHeight: 50, fallbackWidth: 50,color: Colors.blueAccent),
-                        Placeholder(fallbackHeight: 50, fallbackWidth: 50,color: Colors.lightGreen)
-                      ]
-                    ),
+                    child: FilaImagenes(zonaDeportiva: zonaDeportiva,),
                   ),
                   Text("Reportes", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24), textAlign: TextAlign.left ),
-                  Column(children: secciones),
-
-                ]
+                  FutureBuilder<List<Reporte>>(
+                      future: frp,
+                      builder: (BuildContext context, AsyncSnapshot<List<Reporte>> snapshot) {
+                        if(snapshot.connectionState==ConnectionState.waiting)
+                          return LinearProgressIndicator(minHeight: 3.0, color: Colors.orangeAccent,);
+                        else if(snapshot.hasError)
+                          return Text("Error al consultar reportes.");
+                        else if(snapshot.hasData)
+                          return Column(
+                          children: snapshot.requireData.length==0?
+                          [Text("No hay reportes disponibles. Esto no debería pasar.")]:
+                          snapshot.requireData.map((e) => ReporteDeporte(reporte:e, zonaDeportiva: zonaDeportiva,)).toList()
+                        );
+                        else return Text ("Error interno de la App.");
+                      },
                 )
+                ])
             ),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           elevation:32,
-
         );
       }
   );
-}
-
-class ReporteDeporte extends StatelessWidget {
-  String nombreDeporte="";
-  ZonaDeportiva zonaDeportiva;
-  Map<String, double>valoraciones={};
-  List<Widget> widgetsAtributos=[];
-
-  ReporteDeporte({
-    required this.nombreDeporte,
-    required this.valoraciones,
-    required this.zonaDeportiva,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    valoraciones.forEach((key, value) {widgetsAtributos.add(ValoracionEspacio(texto: key, valor: value));});
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(Reporte.getNombreBonito(nombreDeporte), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18), textAlign: TextAlign.left ),
-            MaterialButton(
-                onPressed: (){valorarDeporte(context, zonaDeportiva, nombreDeporte, valoraciones);},
-                child: Text("VALORAR", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange))),
-          ],
-        ),
-        ...widgetsAtributos,
-        SizedBox(height: 20),
-      ],
-
-    );
-  }
 }

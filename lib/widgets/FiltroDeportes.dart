@@ -1,3 +1,4 @@
+import 'package:deportes/models/Reporte.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -34,23 +35,27 @@ class _FiltroDeportesState extends State<FiltroDeportes> {
     List<Widget> aux=[];
     for(int i=0; i<iconos.length; i++){
       aux.add(
-          Container(
-            decoration: BoxDecoration(
-              color: activado==i?Colors.orange:Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(iconos[i]),
-              iconSize: 30,
-              splashRadius: 24,
-              onPressed: () => setState(() {
-                activado = i;
-                widget.onTap(getDeporteActivado());
-              }),
-              color: activado==i?Colors.white:Colors.black,
-              enableFeedback: true,
-              hoverColor: Colors.orangeAccent,
+          Tooltip(
+
+            message: Reporte.getNombreBonito(listaDeportes[i]),
+            child: Container(
+              decoration: BoxDecoration(
+                color: activado==i?Colors.orange:Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: Icon(iconos[i]),
+                iconSize: 30,
+                splashRadius: 24,
+                onPressed: () => setState(() {
+                  activado = i;
+                  widget.onTap(getDeporteActivado());
+                }),
+                color: activado==i?Colors.white:Colors.black,
+                enableFeedback: true,
+                hoverColor: Colors.orangeAccent,
       ),
+            ),
           ) );
     }
     return aux;

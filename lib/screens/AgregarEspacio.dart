@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:deportes/api/zonas_deportivas.dart';
 import 'package:deportes/models/ZonaDeportiva.dart';
 import 'package:deportes/widgets/MapaAgregar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AgregarEspacio extends StatefulWidget {
   @override
@@ -25,6 +28,8 @@ class AgregarEspacioState extends State<AgregarEspacio> {
     Tooltip(child: Icon(Icons.sports_tennis), message: "Tenis"),
     Tooltip(child: Icon(Icons.skateboarding), message: "Skateboard"),
   ];
+
+  List<Uint8List> imagenes =[];
 
   List<String> getDeportesSeleccionados() {
     List<String> aux = [];
@@ -50,7 +55,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
         deportes: getDeportesSeleccionados(),
       );
       //print(zd.toString());
-      bool agregado = await ApiZonasDeportivas.addZonaDeportiva(zd);
+      bool agregado = await ApiZonasDeportivas.addZonaDeportiva(zd, imagenes);
       if(agregado){
         Navigator.pop(context);
         Navigator.pop(context);
@@ -67,7 +72,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Agregar Espacio Deportivo"),
+          title: Text("Agregar Zona Deportiva"),
           backgroundColor: Colors.black87,
           foregroundColor: Colors.white70,
           actions: <Widget>[
@@ -93,7 +98,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                           padding: const EdgeInsets.all(15.0),
                           child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text("Datos del Espacio Deportivo",
+                              child: Text("Datos de la Zona Deportiva",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20))),
@@ -113,7 +118,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                               ),
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'El nombre del espacio no puede estar vacío.';
+                                  return 'El nombre de la zona no puede estar vacío.';
                                 }
                                 return null;
                               }),
@@ -135,7 +140,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                               ),
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'La descripción del espacio no puede estar vacío.';
+                                  return 'La descripción de la zona no puede estar vacía.';
                                 }
                                 return null;
                               }),
@@ -185,7 +190,7 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                           padding: const EdgeInsets.all(15.0),
                           child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text("Ubicación del Espacio Deportivo",
+                              child: Text("Ubicación de la Zona Deportiva",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20))),
@@ -198,20 +203,74 @@ class AgregarEspacioState extends State<AgregarEspacio> {
                                   longitude: long,
                                   onMarkerMoved: (lt, lg) {
                                     setState(() {
-                                      print("LT: $lat");
-                                      print("LG: $long");
+                                      /*print("LT: $lat");
+                                      print("LG: $long");*/
                                       lat = lt;
                                       long = lg;
-                                      print("Se cambia?");
+                                      /*print("Se cambia?");
                                       print("LT: $lat");
-                                      print("LG: $long");
+                                      print("LG: $long");*/
                                     });
                                   }),
                               height: 400),
                         ),
                       ],
                     ))),
+            Card(
+                elevation: 8.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1.0)),
+                //margin: EdgeInsets.all(25.0),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Imagenes de la Zona Deportiva",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children:
+                                [
+                                  ...imagenes.map((e) => Padding(
+                                    padding: const EdgeInsets.only(right:8.0),
+                                    child: ClipRRect(borderRadius: BorderRadius.circular(8.0),
+                                        child: Container(height: 150, width: 150, child:Image.memory(e), decoration: BoxDecoration(color: Colors.grey))),
+                                    )
+                                  ),
+                                  SizedBox(height: 100, width: 100,
+                                      child: IconButton(icon: Icon(Icons.add_box), onPressed: () =>agregarImagen(),)
+                                  )
+                                ]
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))),
           ]),
         ));
+  }
+
+  void agregarImagen() async {
+    final ImagePicker _picker = ImagePicker();
+    final List<XFile>? images = await _picker.pickMultiImage(maxHeight: 1000, maxWidth: 1000, imageQuality: 95);
+    if(images==null) print("No hay imagenes");
+    else {
+      for(XFile a in images){
+        //imagenes.add(Image.file(File(a.path)));
+        imagenes.add(await a.readAsBytes());
+      }
+    }
+
+    setState(() {});
   }
 }

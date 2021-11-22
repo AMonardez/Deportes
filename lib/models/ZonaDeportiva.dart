@@ -8,7 +8,13 @@ class ZonaDeportiva {
   double longitud = 0.0;
   String direccion = "";
   List<String> deportes = [];
-  //List<String> deportes = ["Futbol", "Basquetbol", "Calistenia","Tenis", "Skating"]; //USAR ESTOS DEPORTES.
+  List<int> idDeporteEnZona = [];
+  List<String> colorDeporte = [];
+  List<String> urlimagenes = [
+    'https://s3-deportes.s3.sa-east-1.amazonaws.com/1637114601806_gato_op.png',
+    'https://s3-deportes.s3.sa-east-1.amazonaws.com/1637114544657_ef5f1ddb-1129-4413-96cf-cd3c8cd2ea57_16-9-discover-aspect-ratio_default_1098913.jpg',
+    'https://s3-deportes.s3.sa-east-1.amazonaws.com/1637114169271_gato1.jpg',
+  ];
 
   ZonaDeportiva(
       {required String nombre,
@@ -17,7 +23,11 @@ class ZonaDeportiva {
       required double latitud,
       required double longitud,
       String? direccion,
-      List<String>? deportes}) {
+      List<String>? deportes,
+        List<String>? colorDeporte,
+        List<int>? idDeporteEnZona,
+        List<String>? urlimagenes,
+      }) {
     this.nombre = nombre;
     this.descripcion = descripcion ?? '';
     this.id = id ?? -1;
@@ -25,7 +35,11 @@ class ZonaDeportiva {
     this.longitud = longitud;
     this.deportes = deportes ?? [];
     this.direccion = direccion ?? "";
+    this.idDeporteEnZona = idDeporteEnZona?? [];
+    this.colorDeporte = colorDeporte??[];
+    this.urlimagenes = urlimagenes??[];
   }
+
   @override
   toString() {
     return 'Nombre: ' +
@@ -55,62 +69,22 @@ class ZonaDeportiva {
       descripcion: json['descripcion'],
       id: json['id_zona_deportiva'],
       deportes: json['deportes'].cast<String>(),
+      idDeporteEnZona: json['id_deportes_en_zona'].cast<int>()??[],
+      urlimagenes: json['imagenes'].cast<String>(),
       // cast() es una función sobre listas que me permite castear sus elementos a otro tipo.
       // deportes viene como List<dynamic> y se necesita como List<String>
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, String> toJson() => {
         'nombre': nombre,
         'latitud': latitud.toString(),
         'longitud': longitud.toString(),
         'direccion': direccion,
         'descripcion': descripcion,
         'deportes': jsonEncode(
-            deportes) //No he probado si se serializa una lista de esta forma. Debería funcionar.
-        //'id': id,
+            deportes), //No he probado si se serializa una lista de esta forma. Debería funcionar.
+        'id': id.toString(),
+        "id_deportes_en_zona": idDeporteEnZona.toString()
       };
 }
-  /*
-  class ZonaDeportiva {
-  final int? id_zona_deportiva;
-  final String nombre;
-  final double latitud;
-  final double longitud;
-  final String direccion;
-  final String? descripcion;
-  List<dynamic> deportes;
-
-  ZonaDeportiva(
-      {this.id_zona_deportiva,
-      required this.nombre,
-      required this.direccion,
-      required this.latitud,
-      required this.longitud,
-      this.descripcion,
-      required this.deportes});
-
-  factory ZonaDeportiva.fromJson(Map<String, dynamic> json) {
-    return ZonaDeportiva(
-      id_zona_deportiva: json['id_zona_deportiva'],
-      nombre: json['nombre'],
-      direccion: json['direccion'],
-      descripcion: json['descripcion'],
-      latitud: json['latitud'],
-      longitud: json['longitud'],
-      deportes: json['deportes'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'nombre': nombre,
-        'latitud': latitud,
-        'longitud': longitud,
-        'direccion': direccion,
-        'descripcion': descripcion == null ? ' ' : descripcion,
-        'deportes': deportes
-      };
-}
-
-*/
-

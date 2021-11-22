@@ -1,4 +1,6 @@
 import 'package:deportes/screens/AgregarEspacio.dart';
+import 'package:deportes/screens/TestLoc.dart';
+import 'package:deportes/screens/TestPermission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -28,6 +30,22 @@ class _MenuAnvorguesoState extends State<MenuAnvorgueso> {
             onTap: () {
               //Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context) => AgregarEspacio()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.check),
+            title: Text("Location test"),
+            onTap: () {
+              //Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ListenLocationWidget()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.check),
+            title: Text("Location test"),
+            onTap: () {
+              //Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PermissionStatusWidget()));
             },
           ),
         ]

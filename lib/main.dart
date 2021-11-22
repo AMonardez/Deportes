@@ -1,11 +1,10 @@
 import 'package:deportes/screens/MapaZonasDeportivas.dart';
-import 'package:deportes/widgets/MapaMarcadores.dart';
-import 'package:deportes/widgets/MapaAgregar.dart';
-import 'package:deportes/widgets/MenuAnvorgueso.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(MyApp());
 }
 
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Espacios Deportivos',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.orange,
         fontFamily: GoogleFonts.jost().fontFamily,
         textTheme: GoogleFonts.jostTextTheme()
       ),

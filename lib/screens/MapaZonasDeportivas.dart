@@ -71,7 +71,7 @@ class _MapaZonasDeportivasState extends State<MapaZonasDeportivas> {
                 )
               ]
             );
-            else if(snapshot.hasError) return Text("Error de Future.");
+            else if(snapshot.hasError) return Text("Error de conexión. \n Inténtalo más tarde.");
             else if (snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
             else return Text("Pasas cosaron");
           }

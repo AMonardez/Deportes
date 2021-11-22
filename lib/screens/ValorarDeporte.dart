@@ -1,38 +1,37 @@
+import 'package:deportes/api/valoraciones_deportes.dart';
 import 'package:deportes/models/Reporte.dart';
+import 'package:deportes/models/Valoracion.dart';
 import 'package:deportes/models/ZonaDeportiva.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-Widget toast = Container(
+Widget funToast({required String texto, required IconData iconData,required Color color}) => Container(
   padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
   decoration: BoxDecoration(
     borderRadius: BorderRadius.circular(25.0),
-    color: Colors.orangeAccent,
+    color: color,
   ),
   child: Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Icon(Icons.check),
+      Icon(iconData),
       SizedBox(
         width: 12.0,
       ),
-      Text("Valoración enviada exitosamente."),
+      Text(texto),
     ],
   ),
 );
 
 
-
-Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, Map<String, double> valoraciones) async {
+Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, List<String> atributos) async {
   //String deporte= "Fútbol";
-  List<String> atributos=[];
-  valoraciones.forEach((key, value) {atributos.add(key);});
   List<double> puntuaciones=List<double>.filled(atributos.length, 0.0);
+  int idDeporteEnZona = zd.idDeporteEnZona[zd.deportes.indexOf(deporte)];
 
   FToast fToast =FToast().init(ctx);
-
 
   return showDialog<void> (
       context: ctx,
@@ -43,7 +42,9 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
             return AlertDialog (
               title: Column(
                 children: [
-                  Text("Valorando ${Reporte.getNombreBonito(deporte)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
+                  //Text("Valorando ${Reporte.getNombreBonito(deporte)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
+                  Text(deporte, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
+                  Text(idDeporteEnZona.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10), textAlign: TextAlign.left),
                   Text(zd.nombre,
                     textAlign: TextAlign.right,
                     style: TextStyle(fontSize: 10),
@@ -90,24 +91,24 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
               actions: [
                 MaterialButton(
                   child: Text("ENVIAR", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                  onPressed: () {
+                  onPressed: () async {
                     print("Guardar");
-                    //ValoracionesApi.addValoracion(zd.id, atributos, puntuaciones);
-                    //TODO: Agregar logica para manejar toast de exito y error.
-                    Navigator.pop(context);
-                    fToast.showToast(child: toast);
-
+                    Map<String, double> vals={};
+                    for(int i =0; i<atributos.length; i++){
+                      vals[atributos[i]]=puntuaciones[i];
+                    }
+                    Valoracion v = Valoracion(atributosEvaluados: vals, deporte: deporte, idDeporteZona: idDeporteEnZona);
+                    bool exitoso= await ValoracionesApi.addValoracion(v);
+                    if(exitoso){
+                      Navigator.pop(context);
+                      fToast.showToast(child: funToast(texto: "Valoración enviada exitosamente.", iconData: Icons.check, color: Colors.orangeAccent));
+                    }
+                    else fToast.showToast(child: funToast(texto: "Error al enviar valoración.", iconData: Icons.warning, color: Colors.blueGrey));
                   },
                 ),
-
               ]
-
           );}
         );
       }
   );
-
-
-
-
 }
