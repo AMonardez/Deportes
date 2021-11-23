@@ -35,31 +35,33 @@ class _PermissionStatusState extends State<PermissionStatusWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("permission check")),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Permission status: ${_permissionGranted ?? "unknown"}',
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-          Row(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(right: 42),
-                child: ElevatedButton(
-                  child: const Text('Check'),
-                  onPressed: _checkPermissions,
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Permission status: ${_permissionGranted ?? "unknown"}',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(right: 42),
+                  child: ElevatedButton(
+                    child: const Text('Check'),
+                    onPressed: _checkPermissions,
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                child: const Text('Request'),
-                onPressed: _permissionGranted == PermissionStatus.granted
-                    ? null
-                    : _requestPermission,
-              )
-            ],
-          )
-        ],
+                ElevatedButton(
+                  child: const Text('Request'),
+                  onPressed: _permissionGranted == PermissionStatus.granted
+                      ? null
+                      : _requestPermission,
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

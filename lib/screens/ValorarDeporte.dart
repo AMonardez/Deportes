@@ -9,7 +9,7 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, List<String> atributos) async {
   //String deporte= "Fútbol";
-  List<double> puntuaciones=List<double>.filled(atributos.length, 0.0);
+  List<double> puntuaciones=List<double>.filled(atributos.length, 3.0);
   int idDeporteEnZona = zd.idDeporteEnZona[zd.deportes.indexOf(deporte)];
 
   return showDialog<void> (
@@ -21,11 +21,8 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
             return AlertDialog (
               title: Column(
                 children: [
-                  //Text("Valorando ${Reporte.getNombreBonito(deporte)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
-                  Text(deporte, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
-                  Text(idDeporteEnZona.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10), textAlign: TextAlign.left),
+                  Text("Valorando ${Reporte.getNombreBonito(deporte)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.left),
                   Text(zd.nombre,
-                    textAlign: TextAlign.right,
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -41,7 +38,7 @@ Future<void> valorarDeporte(BuildContext ctx, ZonaDeportiva zd, String deporte, 
                     itemBuilder: (ctx, i){
                       return new Column(
                         children:[
-                          Text(Reporte.getNombreBonito(atributos[i]), style: TextStyle(fontSize: 16)),
+                          Text(Reporte.getAtributoBonito(atributos[i]), style: TextStyle(fontSize: 16)),
                           RatingStars(
                               value: puntuaciones[i],
                               starBuilder: (index, color) => Icon(Icons.star, color: color, size: 50),

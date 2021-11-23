@@ -63,11 +63,11 @@ class ZonaDeportiva {
   factory ZonaDeportiva.fromJson(Map<String, dynamic> json) {
     return ZonaDeportiva(
       nombre: json['nombre'],
-      latitud: json['latitud'] ?? 0.0,
-      longitud: json['longitud'] ?? 0.0,
+      latitud: double.tryParse(json['latitud'].toString()) ?? 0.0,
+      longitud: double.tryParse(json['longitud'].toString()) ?? 0.0,
       direccion: json['direccion'] ?? '',
       descripcion: json['descripcion'],
-      id: json['id_zona_deportiva'],
+      id: int.tryParse(json['id_zona_deportiva'].toString())??-1,
       deportes: json['deportes'].cast<String>(),
       idDeporteEnZona: json['id_deportes_en_zona'].cast<int>()??[],
       urlimagenes: json['imagenes'].cast<String>(),

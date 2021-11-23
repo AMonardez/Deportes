@@ -19,7 +19,7 @@ class ApiZonasDeportivas {
       }
       return aux;
     }
-    throw Exception("Error de Api");
+    throw Exception("Error de Api: getZonasDeportivas");
     //return [];
   }
 

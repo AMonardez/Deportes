@@ -53,7 +53,7 @@ class AtributoDeporte extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Flexible(child: Text(texto + "($votos)", overflow: TextOverflow.visible,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.left )),
+          Flexible(child: Text(Reporte.getAtributoBonito(texto) + " ($votos)", overflow: TextOverflow.visible,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), textAlign: TextAlign.left )),
           RatingStars(
             value: valoracion,
             starBuilder: (index, color) => Icon(

@@ -66,4 +66,19 @@ class Reporte{
     else return clave[0].toUpperCase() + clave.substring(1).toLowerCase();
   }
 
+  static getAtributoBonito(String clave){
+    Map<String, String> valoresespeciales ={
+      "iluminacion": "Iluminación",
+      "estado maquinas": "Estado de Maquinas",
+      "variedad maquinas": "Variedad de Maquinas",
+      /*"pistas": "Pistas",
+      "rampas": "Rampas",
+      "aros" : "Aros",
+      "arcos": "Arcos",
+      "cancha": "Cancha",*/
+    };
+    if(valoresespeciales.containsKey(clave)) return valoresespeciales[clave];
+    else return clave[0].toUpperCase() + clave.substring(1).toLowerCase();
+  }
+
 }

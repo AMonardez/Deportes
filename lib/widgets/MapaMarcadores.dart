@@ -52,7 +52,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
   @override
   initState() {
     super.initState();
-    //print("initstate");
+    print("initstate");
     ubicacion= new LatLng(latDefault, longDefault);
     latHome = latDefault;
     longHome = longDefault;
@@ -60,7 +60,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
       location: new LatLng(latDefault, longDefault),
     );
     getLiveLocation().then((value) {
-      //print("auxLoc??");
+      print("auxLoc??");
       setState(() {
         latHome = value[0];
         longHome= value[1];
@@ -69,7 +69,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
       });
     });
     escuchador= location.onLocationChanged.listen((LocationData currentLocation) {
-      //print("Listener");
+      print("Listener");
       setState(() {
         updateLocation(currentLocation.latitude??latDefault, currentLocation.longitude??longDefault);
       });
@@ -80,7 +80,7 @@ class MapaMarcadoresState extends State<MapaMarcadores>{
   late StreamSubscription escuchador;
 
   void updateLocation (double auxLat, double auxLong){
-    //print("updateLocation");
+    print("updateLocation");
     setState(() {
       if(primeraUbicacion){
         setState(() {

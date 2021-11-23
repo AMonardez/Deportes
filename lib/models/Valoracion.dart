@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Valoracion{
   int idDeporteZona;
   String deporte;
@@ -8,10 +10,10 @@ class Valoracion{
 
   List<String> getAtributosValorables() => atributosEvaluados.entries.map((e) => e.key).toList();
 
-  Map<String, dynamic> toJson()=>{
+  Map<String, String> toJson()=>{
     'id_deporte_en_zona': idDeporteZona.toString(),
     'nombre_tipo_deporte': deporte.toString(),
-    'valorizaciones': atributosEvaluados.entries.map((e) => {"variable": e.key.toLowerCase(), "puntuacion": e.value}).toList(), //uffff
+    'valorizaciones': jsonEncode(atributosEvaluados.entries.map((e) => {"variable": e.key, "puntuacion": e.value}).toList()),
     'id_usuario': idUsuario.toString(),
   };
 
@@ -19,7 +21,4 @@ class Valoracion{
   toString() {
     return toJson().toString();
   }
-
-  //double getPuntuacion(String deporteBuscado) => atributosEvaluados.containsKey(deporteBuscado)?atributosEvaluados[deporteBuscado]:-1.0 ;
-
 }

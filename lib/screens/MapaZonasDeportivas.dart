@@ -3,6 +3,7 @@ import 'package:deportes/models/ZonaDeportiva.dart';
 import 'package:deportes/widgets/FiltroDeportes.dart';
 import 'package:deportes/widgets/MapaMarcadores.dart';
 import 'package:deportes/widgets/MenuAnvorgueso.dart';
+import 'package:deportes/widgets/Toasts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -75,8 +76,11 @@ class _MapaZonasDeportivasState extends State<MapaZonasDeportivas> {
                 )
               ]
             );
-            else if(snapshot.hasError) return Text("Error de conexión. \n Inténtalo más tarde.");
-            else if (snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
+
+            else if(snapshot.hasError) {
+                avisarToast(buildContext: ctx, texto: snapshot.error.toString(), iconData: Icons.warning, color: Colors.red[600]!);
+                return Text("Error de conexión. \n Inténtalo más tarde.");
+            } else if (snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
             else return Text("Pasas cosaron");
           }
         ),

@@ -17,9 +17,11 @@ Future<List<String>> uploadImagenes(List<Uint8List> imagenes, ZonaDeportiva zd) 
   var response = await request.send();
   print("Response statusCode: " + response.statusCode.toString());
   //TODO: Leer y retornar las urls de las imagenes subidas.
-  //Lo de la imagen de donfrancisco es provisorio.
-  String imagendonfrancisco='https://s3-deportes.s3.sa-east-1.amazonaws.com/1637545124552_Plaza_de_la_Juventud0.jpg';
-  if(response.statusCode==200) return [imagendonfrancisco];
+  String bodyres= await response.stream.bytesToString();
+  var body = jsonDecode(bodyres);
+  List<dynamic> aux = body['imagenes']!;
+  var urlsimag= aux.cast<String>();
+  if(response.statusCode==200) return urlsimag;
   else return [];
 }
 
